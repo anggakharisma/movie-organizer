@@ -1,27 +1,29 @@
 import { useEffect, useState } from "react";
-import { ask, open } from "@tauri-apps/api/dialog";
+import { open } from "@tauri-apps/api/dialog";
 
 import { invoke } from "@tauri-apps/api/tauri";
 import "./App.css";
+import { appWindow } from "@tauri-apps/api/window";
 
 interface Movie {
 	path: string;
 	name: string;
 	poster: string;
 	year: number;
+	category: string;
 }
 
 const MovieCard = ({ movie }: { movie: Movie }) => {
 	return (
-		<div className="max-w-full w-[15%]">
+		<div className="max-w-full hover:cursor-pointer w-full">
 			<img
-				className="bg-cover"
-				src="https://movies.universalpictures.com/media/opr-tsr1sheet3-look2-rgb-3-1-1-64545c0d15f1e-1.jpg"
+				className="bg-cover rounded-lg"
+				src={movie.poster}
 				alt="movie card"
 			/>
 			<div className="text-xl text-white mt-4">
-				<h1 className="">{movie.name}</h1>
-				<h1>{movie.year}</h1>
+				<h1 className="font-semibold text-2xl">{movie.name}</h1>
+				<h1 className="text-gray-400 font-light">{movie.year}</h1>
 			</div>
 		</div>
 	);
@@ -29,7 +31,7 @@ const MovieCard = ({ movie }: { movie: Movie }) => {
 
 function App() {
 	const [movieList, setMovieList] = useState<any>([]);
-	const [error, setError] = useState<String>("");
+	const [error, setError] = useState<string>("");
 
 	useEffect(() => {
 		fetchMovieLists();
@@ -46,15 +48,31 @@ function App() {
 	}
 
 	return (
-		<div className="min-h-screen">
-			<div className="flex w-full justify-between align-middle items-center">
-				<div className="text-white inline-block bg-emerald-600 px-8 py-2">
-					<h1 className="tracking-[.25rem] font-semibold text-2xl">SEIRI</h1>
+		<div className="min-h-max">
+			<div
+				data-tauri-drag-region
+				className="flex justify-between gap-4 align-middle items-center w-[95%] mt-8 m-auto"
+			>
+				<div className="text-white pb-2">
+					<h1 className="text-emerald-500 font-semibold tracking-widest text-4xl">
+						SEIRI
+					</h1>
 					<p className="text-sm">Movie Organizer</p>
 				</div>
-				<p className="mr-8 bg-orange-600 text-white font-bold p-2">O</p>
+				<div className="flex justify-center gap-10">
+					<p className="text-white font-normal text-md p-2 text-center">
+						Config
+					</p>
+					<p
+						onClick={() => appWindow.close()}
+						className="text-white font-normal text-md p-2 text-center"
+					>
+						Refresh
+					</p>
+				</div>
 			</div>
 
+			{/* This is sucks change this, dont like how this is handled */}
 			<div className="bg-yellow-400">
 				{error !== "" && (
 					<div>
@@ -88,10 +106,14 @@ function App() {
 					</div>
 				)}
 			</div>
-			<div className="flex flex-wrap w-10/12 mt-8 m-auto gap-8">
-				{movieList.map((item: Movie, id: number) => (
-					<MovieCard key={id} movie={item} />
-				))}
+
+			<div className="w-10/12 max-w-full mt-8 pt-2 py-8 px-10 m-auto">
+				<h1 className="text-2xl text-white my-4">Your movies</h1>
+				<div className="grid grid-cols-5 gap-8">
+					{movieList.map((item: Movie, id: number) => (
+						<MovieCard key={id} movie={item} />
+					))}
+				</div>
 			</div>
 		</div>
 	);
