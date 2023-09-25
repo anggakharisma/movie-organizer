@@ -40,6 +40,7 @@
 				"close": true,
 				"hide": true,
 				"show": true,
+				"setSize": true,
 				"maximize": true,
 				"minimize": true,
 				"unmaximize": true,
