@@ -1,6 +1,7 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
+mod cache;
 mod config;
 mod directory;
 mod movie;
@@ -10,28 +11,15 @@ use std::{
     vec,
 };
 
+use cache::cache_movies;
 use directories::ProjectDirs;
+use movie::Movie;
 use serde::{Deserialize, Serialize};
-use serde_json::Value;
 use tauri::Manager;
 
 #[derive(Serialize, Debug, Deserialize)]
 struct Config {
     movie_dir: String,
-}
-
-#[derive(Serialize, Debug, Deserialize)]
-struct Movie {
-    poster: String,
-    year: usize,
-    name: String,
-    path: String,
-    category: String,
-}
-
-#[tauri::command]
-fn cache_movies(movies: &mut Vec<Movie>) {
-    //println!("{:?}", movies[0]);
 }
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
@@ -90,6 +78,7 @@ fn initialize_config() {
 
 #[tauri::command]
 async fn get_movie_list() -> Result<Vec<Movie>, &'static str> {
+    // Move this error maybe ?
     if get_selected_dir().is_empty() {
         return Err("Please set your movie directory");
     }
@@ -98,25 +87,24 @@ async fn get_movie_list() -> Result<Vec<Movie>, &'static str> {
     let file_names = file_list_result.filter_map(Result::ok);
 
     let mut movie_list: Vec<Movie> = vec![];
-    let mut base_url = String::from("https://www.omdbapi.com/?apikey=eebff1e2&t=pulp");
-    base_url.push_str("pulp fiction");
 
-    let movie_info_url = "https://www.omdbapi.com/?apikey=eebff1e2&t=pulp+fiction".to_string();
-    let a = reqwest::get(movie_info_url)
-        .await
-        .unwrap()
-        .json::<serde_json::Value>()
-        .await
-        .unwrap();
+    //let a = reqwest::get(base_url)
+    //    .await
+    //    .unwrap()
+    //    .json::<serde_json::Value>()
+    //    .await
+    //    .unwrap();
 
     for movie in file_names {
-        movie_list.push(Movie {
-            poster: a["Poster"].as_str().unwrap().to_string(),
-            year: 2014,
-            path: String::from(movie.path().to_str().unwrap()),
-            name: String::from(movie.file_name().to_str().unwrap()),
-            category: "Supa action".into(),
-        })
+        let mut base_url = String::from("https://www.omdbapi.com/?apikey=eebff1e2&t=");
+        base_url.push_str(movie.file_name().to_str().unwrap());
+        //movie_list.push(Movie {
+        //    poster: a["Poster"].as_str().unwrap().to_string(),
+        //    year: 2014,
+        //    path: String::from(movie.path().to_str().unwrap()),
+        //    name: String::from(movie.file_name().to_str().unwrap()),
+        //    category: "Supa action".into(),
+        //})
     }
 
     cache_movies(&mut movie_list);
