@@ -1,7 +1,10 @@
-# Tauri + React + Typescript
+# SEIRI MOVIE ORGANZIER
 
-This template should help get you started developing with Tauri, React and Typescript in Vite.
+Build with Tauri which is Rust, React & Typescript.
 
-## Recommended IDE Setup
 
-- [VS Code](https://code.visualstudio.com/) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
+Development steps
+```
+{pnpm, yarn, npm} install
+{pnpm, yarn} tauri dev or npm run tauri dev
+```
