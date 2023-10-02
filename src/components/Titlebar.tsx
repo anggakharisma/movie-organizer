@@ -1,4 +1,4 @@
-import { LogicalSize, PhysicalSize, appWindow } from "@tauri-apps/api/window";
+import { LogicalSize, appWindow } from "@tauri-apps/api/window";
 
 export default function Titlebar() {
 	return (
