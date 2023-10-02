@@ -40,7 +40,7 @@ function App() {
 
 	async function fetchMovieLists() {
 		try {
-			await setMovieList(await invoke("get_movie_list"));
+			setMovieList(await invoke("get_movie_list"));
 		} catch (e) {
 			if (typeof e === "string") {
 				setError(e);
@@ -96,7 +96,7 @@ function App() {
 										dir: selected,
 									});
 
-									await setMovieList(await invoke("get_movie_list"));
+									setMovieList(await invoke("get_movie_list"));
 									setError("");
 								}}
 								className="ml-12 bg-black text-white mb-2 px-4 py-2 mt-2"
