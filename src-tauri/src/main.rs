@@ -58,27 +58,23 @@ fn set_selected_dir(dir: String) {
 
 #[tauri::command]
 fn initialize_config() {
-    let proj_dirs = ProjectDirs::from("com", "dashdev", "sushei").expect("Can't get file");
+    let proj_dirs = ProjectDirs::from("com", "dashdev", "seirei").expect("Can't get file");
 
-    // Create directory for config, OS based configuration file, to know more check directories crates
-    let path = std::path::Path::new(proj_dirs.config_dir())
-        .parent()
-        .unwrap();
+    // Create directory for config, OS based configuration file
+    let path = std::path::Path::new(proj_dirs.config_dir());
 
-    if path.exists() {
-        return;
-    }
-
-    // Then create the actual config file
+    // if path.exists() {
+    //     return;
+    // }
     std::fs::create_dir_all(path).unwrap();
 
-    File::create(proj_dirs.config_dir().with_file_name("config.toml"))
-        .expect("Can't create folder");
+    File::create(path.join("config.toml")).unwrap();
 }
 
 #[tauri::command]
 async fn get_movie_list() -> Result<Vec<Movie>, &'static str> {
     // Move this error maybe ?
+    println!("{}", get_selected_dir());
     if get_selected_dir().is_empty() {
         return Err("Please set your movie directory");
     }

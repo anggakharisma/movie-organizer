@@ -80,7 +80,7 @@ function App() {
 								<span className="bg-black text-xl inline-block py-2 text-yellow-400 px-4 mr-1">
 									!
 								</span>{" "}
-								{error && error}{" "}
+								{error}
 							</h2>
 							<button
 								type="button"
@@ -89,6 +89,7 @@ function App() {
 										directory: true,
 										multiple: false,
 									});
+									console.log(selected);
 
 									if (selected === null) return;
 
