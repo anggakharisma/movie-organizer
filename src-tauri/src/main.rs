@@ -63,9 +63,9 @@ fn initialize_config() {
     // Create directory for config, OS based configuration file
     let path = std::path::Path::new(proj_dirs.config_dir());
 
-    // if path.exists() {
-    //     return;
-    // }
+    if path.exists() {
+        return;
+    }
     std::fs::create_dir_all(path).unwrap();
 
     File::create(path.join("config.toml")).unwrap();
@@ -74,7 +74,6 @@ fn initialize_config() {
 #[tauri::command]
 async fn get_movie_list() -> Result<Vec<Movie>, &'static str> {
     // Move this error maybe ?
-    println!("{}", get_selected_dir());
     if get_selected_dir().is_empty() {
         return Err("Please set your movie directory");
     }
@@ -91,9 +90,9 @@ async fn get_movie_list() -> Result<Vec<Movie>, &'static str> {
     //    .await
     //    .unwrap();
 
-    for movie in file_names {
-        let mut base_url = String::from("https://www.omdbapi.com/?apikey=eebff1e2&t=");
-        base_url.push_str(movie.file_name().to_str().unwrap());
+    // for movie in file_names {
+        // let mut base_url = String::from("https://www.omdbapi.com/?apikey=eebff1e2&t=");
+        // base_url.push_str(movie.file_name().to_str().unwrap());
         //movie_list.push(Movie {
         //    poster: a["Poster"].as_str().unwrap().to_string(),
         //    year: 2014,
@@ -101,9 +100,9 @@ async fn get_movie_list() -> Result<Vec<Movie>, &'static str> {
         //    name: String::from(movie.file_name().to_str().unwrap()),
         //    category: "Supa action".into(),
         //})
-    }
+    // }
 
-    cache_movies(&mut movie_list);
+    // cache_movies(&mut movie_list);
 
     Ok(movie_list)
 }
