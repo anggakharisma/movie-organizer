@@ -14,7 +14,6 @@ interface Movie {
 }
 
 const MovieCard = ({ movie }: { movie: Movie }) => {
-	console.log(movie.poster);
 	return (
 		<div className="max-w-full hover:cursor-pointer w-full">
 			<img
@@ -23,8 +22,8 @@ const MovieCard = ({ movie }: { movie: Movie }) => {
 				alt="movie card"
 			/>
 			<div className="text-xl text-white mt-4">
-				<h1 className="font-semibold text-xl">{movie.name}</h1>
-				<h1 className="text-gray-400 text-md font-light">{movie.year}</h1>
+				<h1 className="font-semibold text-md">{movie.name.substring(0, 20)}</h1>
+				<h1 className="text-gray-400 text-sm font-light">{movie.year}</h1>
 			</div>
 		</div>
 	);
@@ -36,8 +35,10 @@ function App() {
 
 	useEffect(() => {
 		fetchMovieLists();
+		return () => {
+			setMovieList([]);
+		}
 	}, []);
-
 	async function fetchMovieLists() {
 		try {
 			setMovieList(await invoke("get_movie_list"));
@@ -59,7 +60,7 @@ function App() {
 						</h1>
 						<p className="text-sm">Movie Organizer</p>
 					</div>
-					{/*<div className="flex justify-center gap-10">
+					<div className="flex justify-center gap-10">
 						<p className="text-white font-normal text-md p-2 text-center">
 							Config
 						</p>
@@ -69,7 +70,7 @@ function App() {
 						>
 							Refresh
 						</p>
-					</div>*/}
+					</div>
 				</div>
 
 				{/* This is sucks change this, dont like how this is handled */}
@@ -89,7 +90,6 @@ function App() {
 										directory: true,
 										multiple: false,
 									});
-									console.log(selected);
 
 									if (selected === null) return;
 
