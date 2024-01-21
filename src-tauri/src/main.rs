@@ -79,9 +79,21 @@ async fn get_movie_list() -> Result<Vec<Movie>, &'static str> {
     }
 
     let file_list_result = fs::read_dir(get_selected_dir()).unwrap();
-    let file_names = file_list_result.filter_map(Result::ok);
-
+    let filtered_file_list: Vec<_> = file_list_result
+        .map(|y| y.unwrap())
+        .filter(|z| !z.file_name().to_str().unwrap().contains(".DS_Store"))
+        .collect::<Vec<_>>();
     let mut movie_list: Vec<Movie> = vec![];
+
+    for p in filtered_file_list {
+        movie_list.push(Movie {
+            poster: "https://m.media-amazon.com/images/M/MV5BOTJiNDEzOWYtMTVjOC00ZjlmLWE0NGMtZmE1OWVmZDQ2OWJhXkEyXkFqcGdeQXVyNTIzOTk5ODM@._V1_SX300.jpg".to_string(),
+            year: 2014,
+            name: p.file_name().into_string().unwrap(),
+            path: "".to_string(),
+            category: "".to_string(),
+        });
+    }
 
     //let a = reqwest::get(base_url)
     //    .await
@@ -91,15 +103,15 @@ async fn get_movie_list() -> Result<Vec<Movie>, &'static str> {
     //    .unwrap();
 
     // for movie in file_names {
-        // let mut base_url = String::from("https://www.omdbapi.com/?apikey=eebff1e2&t=");
-        // base_url.push_str(movie.file_name().to_str().unwrap());
-        //movie_list.push(Movie {
-        //    poster: a["Poster"].as_str().unwrap().to_string(),
-        //    year: 2014,
-        //    path: String::from(movie.path().to_str().unwrap()),
-        //    name: String::from(movie.file_name().to_str().unwrap()),
-        //    category: "Supa action".into(),
-        //})
+    // let mut base_url = String::from("https://www.omdbapi.com/?apikey=<API_KEY>&t=");
+    // base_url.push_str(movie.file_name().to_str().unwrap());
+    //movie_list.push(Movie {
+    //    poster: a["Poster"].as_str().unwrap().to_string(),
+    //    year: 2014,
+    //    path: String::from(movie.path().to_str().unwrap()),
+    //    name: String::from(movie.file_name().to_str().unwrap()),
+    //    category: "Supa action".into(),
+    //})
     // }
 
     // cache_movies(&mut movie_list);
@@ -121,7 +133,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         ])
         .setup(|app| {
             #[cfg(debug_assertions)]
-            app.get_window("main").unwrap().open_devtools(); // `main` is the first window from tauri.conf.json without an explicit label
+            app.get_window("main").unwrap().open_devtools();
             Ok(())
         })
         .run(tauri::generate_context!())

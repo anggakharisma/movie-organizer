@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "@tauri-apps/api": "^1.4.0",
+    "g": "^2.0.1",
+    "pnpm": "^8.14.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
