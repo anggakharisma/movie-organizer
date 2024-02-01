@@ -1,5 +1,4 @@
 # SEIRI MOVIE ORGANZIER
-
 Build with Tauri which is Rust, React & Typescript.
 
 
