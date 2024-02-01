@@ -6,8 +6,8 @@ export default function Titlebar() {
 			data-tauri-drag-region
 			className="flex justify-between fixed top-0 left-0 right-0 bg-gray-950 border-y-2 border-gray-800"
 		>
-			<h1>Title</h1>
-			<div className="flex gap-8 text-white bg-emerald-600 py-1 px-6 rounded-md mr-2 hover:cursor-pointer text-md">
+			<h1></h1>
+			<div className="flex gap-8 text-white bg-emerald-600 px-6 rounded-sm hover:cursor-pointer text-md">
 				<p>-</p>
 				<p
 					onClick={async () => {
