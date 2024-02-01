@@ -17,6 +17,8 @@ jobs:
         with:
           toolchain: stable
           override: true
+      - name: Reqs
+        run: sudo apt-get install libgtk-3-dev
       - name: Test
         run: cargo test --verbose
       - name: Build
