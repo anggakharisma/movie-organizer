@@ -4,30 +4,8 @@ import { open } from "@tauri-apps/api/dialog";
 import { invoke } from "@tauri-apps/api/tauri";
 import "./App.css";
 import Titlebar from "./components/Titlebar";
+import MovieCard from "./components/MovieCard";
 
-interface Movie {
-	path: string;
-	name: string;
-	poster: string;
-	year: number;
-	category: string;
-}
-
-const MovieCard = ({ movie }: { movie: Movie }) => {
-	return (
-		<div className="max-w-full hover:cursor-pointer w-full">
-			<img
-				className="bg-cover rounded-lg"
-				src={movie.poster}
-				alt="movie card"
-			/>
-			<div className="text-xl text-white mt-4">
-				<h1 className="font-semibold text-md">{movie.name.substring(0, 20)}</h1>
-				<h1 className="text-gray-400 text-sm font-light">{movie.year}</h1>
-			</div>
-		</div>
-	);
-};
 
 function App() {
 	const [movieList, setMovieList] = useState<any>([]);
@@ -41,7 +19,7 @@ function App() {
 	}, []);
 	async function fetchMovieLists() {
 		try {
-			setMovieList(await invoke("get_movie_list"));
+			// setMovieList(await invoke("get_movie_list"));
 		} catch (e) {
 			if (typeof e === "string") {
 				setError(e);
@@ -65,7 +43,7 @@ function App() {
 							Config
 						</p>
 						<p
-							
+
 							className="text-white font-normal text-md p-2 text-center"
 						>
 							Refresh

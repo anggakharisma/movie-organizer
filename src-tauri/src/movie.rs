@@ -1,91 +1,93 @@
-use std::fs;
+use std::{error::Error, fs};
 
 use serde::{Deserialize, Serialize};
 
-use crate::config::get_selected_movie_dir;
+use crate::{cache::get_cache_movie_dir, config::get_selected_movie_dir};
 
 #[derive(Serialize, Debug, Deserialize)]
 pub struct Movie {
-    pub poster: String,
-    pub year: usize,
     pub name: String,
-    pub path: String,
+    pub poster: Option<String>,
+    pub year: Option<usize>,
+    pub path: Option<String>,
     pub category: Option<String>,
 }
 
 impl Movie {
     fn new(
-        poster: String,
-        year: usize,
         name: String,
-        path: String,
+        poster: Option<String>,
+        year: Option<usize>,
+        path: Option<String>,
         category: Option<String>,
     ) -> Self {
         Movie {
+            name,
             poster,
             year,
-            name,
             path,
             category,
         }
     }
 
-    fn check_cache(&self) -> Option<&Self> {
+    fn check_cache(&self) -> Option<Movie> {
         None
     }
-    fn write_to_cache() {}
-    fn fetch_metadata() {}
-    fn clean_string(&self) -> Option<&Self> {
-        None
+
+    fn write_to_cache(&self) {
+        let path = get_cache_movie_dir().join("movie.json");
+    }
+
+    // maybe be make this a module
+    fn clean_name(&mut self) {
+        self.name = self.name.replace(".", " ");
+    }
+
+    async fn fetch_metdata(&mut self) -> Result<(), Box<dyn Error>> {
+        let mut base_url = String::from("https://www.omdbapi.com/?apikey=eebff1e2&t=");
+        // base_url.push_str(&self.name[..]);
+
+        println!("{}", base_url);
+
+        let a = reqwest::get(base_url)
+            .await?
+            .json::<serde_json::Value>()
+            .await?;
+
+        println!("REQUEST: {:?}", a);
+        Ok(())
+        // self.poster = Some(String::from(a["Poster"].as_str().expect("something went wrong")));
     }
 }
 
 #[tauri::command]
-pub fn get_movie_list() -> Result<Vec<Movie>, &'static str> {
+pub async fn get_movie_list() -> Result<Vec<Movie>, &'static str> {
     if get_selected_movie_dir().is_empty() {
         return Err("Please set your movie directory");
     }
 
     let file_list_result = fs::read_dir(get_selected_movie_dir()).unwrap();
 
-    let filtered_file_list: Vec<_> = file_list_result
+    let filtered_file_list: Vec<String> = file_list_result
         .map(|y| y.unwrap())
         .filter(|z| !z.file_name().to_str().unwrap().contains(".DS_Store"))
-        .collect::<Vec<_>>();
+        .map(|y| String::from(y.path().file_name().unwrap().to_str().unwrap()))
+        .collect::<Vec<String>>();
 
     let mut movie_list: Vec<Movie> = vec![];
+
     for p in filtered_file_list {
-        let m = Movie::new(
-            String::from(""),
-            2014,
-            p.file_name().into_string().unwrap(),
-            String::from(""),
-            Default::default(),
-        );
-        movie_list.push(m);
+        let mut m = Movie::new(p, None, None, None, None);
+        m.clean_name();
+
+        if let Some(x) = m.check_cache() {
+            movie_list.push(x);
+        } else {
+            m.fetch_metdata().await.ok();
+            m.write_to_cache();
+            movie_list.push(m);
+        }
     }
-
-    //let a = reqwest::get(base_url)
-    //    .await
-    //    .unwrap()
-    //    .json::<serde_json::Value>()
-    //    .await
-    //    .unwrap();
-
-    // for movie in file_names {
-    // let mut base_url = String::from("https://www.omdbapi.com/?apikey=<API_KEY>&t=");
-    // base_url.push_str(movie.file_name().to_str().unwrap());
-    //movie_list.push(Movie {
-    //    poster: a["Poster"].as_str().unwrap().to_string(),
-    //    year: 2014,
-    //    path: String::from(movie.path().to_str().unwrap()),
-    //    name: String::from(movie.file_name().to_str().unwrap()),
-    //    category: "Supa action".into(),
-    //})
-    // }
 
     Ok(movie_list)
 }
-
-pub fn cache_movie_list(movie: &Movie) {}
-pub fn get_movies_cache() {}

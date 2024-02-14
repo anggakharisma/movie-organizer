@@ -1,5 +1,5 @@
-use std::{path::PathBuf, fs};
 use serde::{Deserialize, Serialize};
+use std::{fs, path::PathBuf};
 
 use directories::ProjectDirs;
 
