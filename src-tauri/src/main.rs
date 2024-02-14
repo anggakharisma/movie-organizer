@@ -4,12 +4,14 @@
 mod cache;
 mod config;
 mod directory;
+mod error;
 mod movie;
 
 use std::{fs::File, vec};
 
 use crate::config::set_selected_movie_dir;
 
+use cache::create_cache_movie_folder;
 use directories::ProjectDirs;
 use movie::get_movie_list;
 use tauri::Manager;
@@ -21,9 +23,12 @@ fn initialize_config() {
     // Create directory for config, OS based configuration file
     let path = std::path::Path::new(proj_dirs.config_dir());
 
+    create_cache_movie_folder();
+
     if path.exists() {
         return;
     }
+
     std::fs::create_dir_all(path).unwrap();
 
     File::create(path.join("config.toml")).unwrap();
