@@ -19,7 +19,7 @@ function App() {
 	}, []);
 	async function fetchMovieLists() {
 		try {
-			// setMovieList(await invoke("get_movie_list"));
+			setMovieList(await invoke("get_movie_list"));
 		} catch (e) {
 			if (typeof e === "string") {
 				setError(e);

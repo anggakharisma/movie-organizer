@@ -1,6 +1,7 @@
 # SEIRI MOVIE ORGANZIER
-Build with Tauri which is Rust, React & Typescript.
 
+![Screenshot](ss.png)
+Build with Tauri which is Rust, React & Typescript.
 
 Development steps
 ```
