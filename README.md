@@ -7,8 +7,9 @@ Build with Tauri which is Rust, React & Typescript.
 - OMDB api key
 
 ### Features
-⚠️ - Not implemented yet 
-✅ - Implemented
+⚠️ Not implemented yet 
+
+✅ Implemented
 
 - Auto fetch poster/metadata using OMDB api (✅)
 - Metadata cache (✅)
