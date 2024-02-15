@@ -57,14 +57,10 @@ impl Movie {
         )
         .to_string();
 
-        println!("{}", base_url);
-
         let a = reqwest::get(base_url)
             .await?
             .json::<serde_json::Value>()
             .await?;
-
-        println!("REQUEST: {:?}", a.get("Poster"));
 
         match a.get("Poster") {
             Some(_) => {
