@@ -7,7 +7,7 @@ pub fn get_cache_movie_dir() -> PathBuf {
     cache_dir
 }
 
-pub fn create_cache_movie_folder() {
+pub fn create_cache_movie_file() {
     let cache_dir = get_cache_movie_dir();
     let path = std::path::Path::new(&cache_dir);
 

@@ -3,7 +3,7 @@ use std::{error::Error, fs};
 use regex::Regex;
 use serde::{Deserialize, Serialize};
 
-use crate::{cache::get_cache_movie_dir, config::get_selected_movie_dir};
+use crate::{cache::get_cache_movie_dir, config::{get_selected_movie_dir, get_user_config}};
 
 #[derive(Serialize, Debug, Deserialize)]
 pub struct Movie {
@@ -50,8 +50,12 @@ impl Movie {
     }
 
     async fn fetch_metdata(&mut self) -> Result<(), Box<dyn Error>> {
-        let mut base_url = String::from("https://www.omdbapi.com/?apikey=<api_key>&t=");
-        base_url.push_str(&self.name[..]);
+        let base_url = format!(
+            "https://www.omdbapi.com/?apikey={}&t={}",
+            "13",
+            &self.name[..]
+        )
+        .to_string();
 
         println!("{}", base_url);
 
@@ -84,7 +88,6 @@ pub async fn get_movie_list() -> Result<Vec<Movie>, &'static str> {
         .map(|y| y.unwrap())
         .filter(|z| !z.file_name().to_str().unwrap().contains(".DS_Store"))
         .map(|y| String::from(y.path().file_name().unwrap().to_str().unwrap()))
-        .take(5)
         .collect::<Vec<String>>();
 
     let mut movie_list: Vec<Movie> = vec![];

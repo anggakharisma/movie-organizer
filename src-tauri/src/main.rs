@@ -9,9 +9,8 @@ mod movie;
 
 use std::{fs::File, vec};
 
-use crate::config::set_selected_movie_dir;
-
-use cache::create_cache_movie_folder;
+use cache::create_cache_movie_file;
+use config::set_key_value;
 use directories::ProjectDirs;
 use movie::get_movie_list;
 use tauri::Manager;
@@ -23,14 +22,14 @@ fn initialize_config() {
     // Create directory for config, OS based configuration file
     let path = std::path::Path::new(proj_dirs.config_dir());
 
-    create_cache_movie_folder();
+    create_cache_movie_file();
 
+    // Prevent directory from recreating
     if path.exists() {
         return;
     }
 
     std::fs::create_dir_all(path).unwrap();
-
     File::create(path.join("config.toml")).unwrap();
 }
 
@@ -41,7 +40,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
             get_movie_list,
-            set_selected_movie_dir,
+            set_key_value,
             config::get_user_config
         ])
         .setup(|app| {

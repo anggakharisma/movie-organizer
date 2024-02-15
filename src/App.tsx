@@ -4,8 +4,7 @@ import { open } from "@tauri-apps/api/dialog";
 import { invoke } from "@tauri-apps/api/tauri";
 import "./App.css";
 import Titlebar from "./components/Titlebar";
-import MovieCard from "./components/MovieCard";
-
+import MovieCard, { Movie } from "./components/MovieCard";
 
 function App() {
 	const [movieList, setMovieList] = useState<any>([]);
@@ -33,10 +32,9 @@ function App() {
 			<div className="min-h-max">
 				<div className="flex justify-between gap-4 align-middle items-center w-[95%] mt-12 m-auto">
 					<div className="text-white pb-2">
-						<h1 className="text-emerald-500 font-semibold tracking-widest text-4xl">
-							SEIRI
-						</h1>
-						<p className="text-sm">Movie Organizer</p>
+						<p className="text-white font-normal text-md p-2 text-center">
+							Toolbar
+						</p>
 					</div>
 					<div className="flex justify-center gap-10">
 						<p className="text-white font-normal text-md p-2 text-center">
@@ -71,11 +69,12 @@ function App() {
 
 									if (selected === null) return;
 
-									await invoke("set_selected_dir", {
-										dir: selected,
+									await invoke("set_key_value", {
+										key: "movie_dir",
+										val: selected
 									});
 
-									setMovieList(await invoke("get_movie_list"));
+									await fetchMovieLists();
 									setError("");
 								}}
 								className="ml-12 bg-black text-white mb-2 px-4 py-2 mt-2"

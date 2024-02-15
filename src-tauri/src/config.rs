@@ -1,11 +1,41 @@
 use serde::{Deserialize, Serialize};
-use std::{fs, path::PathBuf};
+use std::{default, fs, path::PathBuf};
+use tauri::utils::config;
 
 use directories::ProjectDirs;
 
-#[derive(Serialize, Debug, Deserialize)]
+#[derive(Serialize, Debug, Deserialize, Clone)]
 pub struct Config {
-    pub movie_dir: String,
+    pub movie_dir: Option<String>,
+    pub api_key: Option<String>,
+}
+
+impl Config {
+    pub fn get_key(self, key: &str) -> Result<String, String> {
+        match key {
+            "movie_dir" => Ok(self.movie_dir.unwrap()),
+            "api_key" => Ok(self.api_key.unwrap()),
+            _ => Err(format!("Err")),
+        }
+    }
+
+    pub fn set_key(&mut self, key: &str, val: &str) -> Result<(), String> {
+        if val.is_empty() {
+            return Err(format!("Err"));
+        }
+
+        match key {
+            "movie_dir" => {
+                self.movie_dir = Some(val.to_string());
+                Ok(())
+            }
+            "api_key" => {
+                self.api_key = Some(val.to_string());
+                Ok(())
+            }
+            _ => Err(format!("Err")),
+        }
+    }
 }
 
 #[tauri::command]
@@ -26,21 +56,23 @@ pub fn get_selected_movie_dir() -> String {
         return String::from("");
     }
 
-    let config: Config = toml::from_str(&f).unwrap();
-
-    if config.movie_dir.is_empty() {
+    let config_from_toml: Config = toml::from_str(&f).unwrap();
+    if config_from_toml.movie_dir.is_none() {
         return String::from("");
     }
 
-    config.movie_dir
+    config_from_toml.movie_dir.expect("wrong")
 }
 
 #[tauri::command]
-pub fn set_selected_movie_dir(dir: String) {
+pub fn set_key_value(key: &str, val: &str) {
     let user_config = get_user_config();
+    let mut config = Config {
+        movie_dir: Default::default(),
+        api_key: Default::default(),
+    };
 
-    let config = Config { movie_dir: dir };
-
+    config.set_key(key, val).ok();
     let toml = toml::to_string(&config).unwrap();
     fs::write(user_config, &toml).unwrap();
 }

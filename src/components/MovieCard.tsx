@@ -1,4 +1,4 @@
-interface Movie {
+export interface Movie {
 	path: string;
 	name: string;
 	poster: string;
