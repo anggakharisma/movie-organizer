@@ -1,11 +1,14 @@
-use std::{error::Error, fs};
+use std::{
+    error::Error,
+    fs::{self, OpenOptions},
+};
 
 use regex::Regex;
 use serde::{Deserialize, Serialize};
 
-use crate::{cache::get_cache_movie_dir, config::{get_selected_movie_dir, get_user_config}};
+use crate::{cache::get_cache_movie_dir, config::get_selected_movie_dir};
 
-#[derive(Serialize, Debug, Deserialize)]
+#[derive(Serialize, Debug, Deserialize, Clone)]
 pub struct Movie {
     pub name: String,
     pub poster: Option<String>,
@@ -31,15 +34,46 @@ impl Movie {
         }
     }
 
-    fn check_cache(&self) -> Option<Movie> {
+    fn default() -> Movie {
+        Movie {
+            name: Default::default(),
+            poster: Default::default(),
+            year: Default::default(),
+            path: Default::default(),
+            category: Default::default(),
+        }
+    }
+
+    fn check_cache(t: &Movie) -> Option<Movie> {
+
+        let cache = get_cache_movie_dir().join("movie.json");
+        let cache_file = fs::read_to_string(&cache).unwrap();
+
+        let movie_cache: serde_json::Value = serde_json::from_str(&cache_file).unwrap();
+        let movie_json: Vec<Movie> = serde_json::from_value(movie_cache).unwrap();
+        if let Some(m) = movie_json.iter().find(|f| t.name == f.name) {
+            println!("{:?} {} {}", m, t.name, m.name);
+            return Some(m.clone());
+        }
         None
     }
 
     fn write_to_cache(&self) {
-        let path = get_cache_movie_dir().join("movie.json");
+        let cache = get_cache_movie_dir().join("movie.json");
+
+        let data = fs::read_to_string(&cache).unwrap();
+        let mut movies: Vec<Movie> = vec![];
+
+        if fs::metadata(&cache).unwrap().len() != 0 {
+            movies = serde_json::from_str(&data).unwrap();
+        }
+
+        movies.push(self.clone());
+        let json_cache = serde_json::to_string(&movies).unwrap();
+        fs::write(cache, &json_cache).unwrap();
     }
 
-    // maybe be make this a module
+    // maybe be make this a module?
     fn clean_name(&mut self) {
         let bracket_regex = Regex::new(
             r"\(([^()]+)\)|\[([^()]+)\]|(?i)(1080p|webrip|bluray|x264|x265|10bit|rarbg|ac3|6ch|-etrg|hevc|psa|\b(19|20)\d{2}\b)",
@@ -50,9 +84,10 @@ impl Movie {
     }
 
     async fn fetch_metdata(&mut self) -> Result<(), Box<dyn Error>> {
+        let apikey = "<api-key>";
         let base_url = format!(
             "https://www.omdbapi.com/?apikey={}&t={}",
-            "13",
+            apikey,
             &self.name[..]
         )
         .to_string();
@@ -66,7 +101,9 @@ impl Movie {
             Some(_) => {
                 self.poster = Some(String::from(a["Poster"].as_str().unwrap()));
             }
-            None => {}
+            None => {
+                self.poster = Some("placeholder image".to_string());
+            }
         };
         Ok(())
     }
@@ -92,7 +129,7 @@ pub async fn get_movie_list() -> Result<Vec<Movie>, &'static str> {
         let mut m = Movie::new(p, None, None, None, None);
         m.clean_name();
 
-        if let Some(x) = m.check_cache() {
+        if let Some(x) = Movie::check_cache(&m) {
             movie_list.push(x);
         } else {
             m.fetch_metdata().await.ok();
