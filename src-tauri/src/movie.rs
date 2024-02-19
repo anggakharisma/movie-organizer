@@ -34,25 +34,13 @@ impl Movie {
         }
     }
 
-    fn default() -> Movie {
-        Movie {
-            name: Default::default(),
-            poster: Default::default(),
-            year: Default::default(),
-            path: Default::default(),
-            category: Default::default(),
-        }
-    }
-
     fn check_cache(t: &Movie) -> Option<Movie> {
-
         let cache = get_cache_movie_dir().join("movie.json");
         let cache_file = fs::read_to_string(&cache).unwrap();
 
         let movie_cache: serde_json::Value = serde_json::from_str(&cache_file).unwrap();
         let movie_json: Vec<Movie> = serde_json::from_value(movie_cache).unwrap();
         if let Some(m) = movie_json.iter().find(|f| t.name == f.name) {
-            println!("{:?} {} {}", m, t.name, m.name);
             return Some(m.clone());
         }
         None
@@ -84,13 +72,14 @@ impl Movie {
     }
 
     async fn fetch_metdata(&mut self) -> Result<(), Box<dyn Error>> {
-        let apikey = "<api-key>";
         let base_url = format!(
             "https://www.omdbapi.com/?apikey={}&t={}",
-            apikey,
+            "eecc",
             &self.name[..]
         )
         .to_string();
+
+        println!("{}", base_url);
 
         let a = reqwest::get(base_url)
             .await?
