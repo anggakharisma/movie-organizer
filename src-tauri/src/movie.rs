@@ -121,6 +121,7 @@ pub async fn get_movie_list() -> Result<Vec<Movie>, &'static str> {
         .map(|y| y.unwrap())
         .filter(|z| !z.file_name().to_str().unwrap().contains(".DS_Store"))
         .map(|y| String::from(y.path().file_name().unwrap().to_str().unwrap()))
+        .take(20)
         .collect::<Vec<String>>();
 
     let mut movie_list: Vec<Movie> = vec![];

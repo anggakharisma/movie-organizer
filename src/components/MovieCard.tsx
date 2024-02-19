@@ -15,7 +15,10 @@ const MovieCard = ({ movie }: { movie: Movie }) => {
 				alt="movie card"
 			/>
 			<div className="text-xl text-white mt-4">
+				<div className="flex justify-between">
 				<h1 className="font-semibold text-md">{movie.name.substring(0, 50)}</h1>
+				<p>...</p>
+				</div>
 				<h1 className="text-gray-400 text-sm font-light">{movie.year}</h1>
 			</div>
 		</div>

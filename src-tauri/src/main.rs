@@ -25,12 +25,10 @@ fn initialize_config() {
     create_cache_movie_file();
 
     // Prevent directory from recreating
-    if path.exists() {
-        return;
+    if !path.exists() || !path.join("config.toml").exists() {
+        std::fs::create_dir_all(path).unwrap();
+        File::create(path.join("config.toml")).unwrap();
     }
-
-    std::fs::create_dir_all(path).unwrap();
-    File::create(path.join("config.toml")).unwrap();
 }
 
 #[tokio::main]
