@@ -1,7 +1,8 @@
 # Movie Organizer
 
+***Movie Organizer*** is a cross-platform desktop application built with Tauri, Rust, React, and TypeScript for managing movies.
+
 ![Screenshot](ss.png)
-MovieOrganizer is a cross-platform desktop application built with Tauri, Rust, React, and TypeScript for managing movies.
 
 ### What you need
 - OMDB api key
