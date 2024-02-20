@@ -88,6 +88,7 @@ impl Movie {
                 self.poster = Some(String::from(a["Poster"].as_str().unwrap()));
             }
             None => {
+                // TODO: Replace this with actual image
                 self.poster = Some("placeholder image".to_string());
             }
         };
