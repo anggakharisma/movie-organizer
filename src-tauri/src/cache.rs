@@ -17,5 +17,4 @@ pub fn create_cache_movie_file() {
 
     std::fs::create_dir_all(&cache_dir).unwrap();
     File::create(cache_dir.join("movie.json")).unwrap();
-    println!("{:?}", cache_dir);
 }

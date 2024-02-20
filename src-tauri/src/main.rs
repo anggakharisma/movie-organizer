@@ -19,18 +19,14 @@ use tauri::Manager;
 fn initialize_config() {
     let proj_dirs = ProjectDirs::from("com", "dashdev", "seirei").expect("Can't get file");
 
-    // Create directory for config, OS based configuration file
     let path = std::path::Path::new(proj_dirs.config_dir());
 
     create_cache_movie_file();
 
-    // Prevent directory from recreating
-    if path.exists() {
-        return;
+    if !path.exists() || !path.join("config.toml").exists() {
+        std::fs::create_dir_all(path).unwrap();
+        File::create(path.join("config.toml")).unwrap();
     }
-
-    std::fs::create_dir_all(path).unwrap();
-    File::create(path.join("config.toml")).unwrap();
 }
 
 #[tokio::main]

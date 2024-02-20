@@ -9,6 +9,7 @@ import MovieCard, { Movie } from "./components/MovieCard";
 function App() {
 	const [movieList, setMovieList] = useState<any>([]);
 	const [error, setError] = useState<string>("");
+	const [isLoading, setIsLoading] = useState(false);
 
 	useEffect(() => {
 		fetchMovieLists();
@@ -18,11 +19,15 @@ function App() {
 	}, []);
 	async function fetchMovieLists() {
 		try {
+			setIsLoading(true);
 			setMovieList(await invoke("get_movie_list"));
+			setIsLoading(false);
 		} catch (e) {
 			if (typeof e === "string") {
 				setError(e);
 			}
+
+			setIsLoading(false);
 		}
 	}
 
@@ -87,6 +92,7 @@ function App() {
 
 				<div className="w-10/12 max-w-full mt-8 pt-2 py-8 px-10 m-auto">
 					<h1 className="text-3xl text-white mb-8">Your movies</h1>
+					{isLoading && <div className="loader fixed top-1/3 left-1/2"></div>}
 					<div className="grid grid-cols-6 gap-8">
 						{movieList.map((item: Movie, id: number) => (
 							<MovieCard key={id} movie={item} />
