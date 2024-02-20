@@ -9,11 +9,16 @@
 
 ### Features
 ✅ Auto fetch poster/metadata using OMDB API
+
 ✅ Metadata cache
+
 ✅ Clean folder/file name
+
 ✅ TOML-based configuration
 
+
 ❌ Play movie within the app
+
 ❌ Right click open location with file manager
 
 ### Development steps
