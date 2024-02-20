@@ -7,8 +7,8 @@
 		"withGlobalTauri": false
 	},
 	"package": {
-		"productName": "movie_organizer",
-		"version": "0.0.0"
+		"productName": "MORG",
+		"version": "0.0.1-alpha"
 	},
 	"tauri": {
 		"allowlist": {
@@ -68,7 +68,7 @@
 				"decorations": false,
 				"fullscreen": false,
 				"resizable": true,
-				"title": "SEIRI",
+				"title": "MORG",
 				"width": 1280,
 				"height": 720
 			}

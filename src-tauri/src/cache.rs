@@ -1,6 +1,6 @@
 use directories::BaseDirs;
 
-use std::{fs::File, io::Write, path::PathBuf};
+use std::{fs::File, path::PathBuf};
 
 pub fn get_cache_movie_dir() -> PathBuf {
     let cache_dir = BaseDirs::new().unwrap().cache_dir().join("seirei");
@@ -11,7 +11,7 @@ pub fn create_cache_movie_file() {
     let cache_dir = get_cache_movie_dir();
     let path = std::path::Path::new(&cache_dir);
 
-    if path.exists() { 
+    if path.exists() {
         return;
     }
 
