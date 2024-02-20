@@ -8,18 +8,18 @@
 - OMDB api key
 
 ### Features
-✅ Auto fetch poster/metadata using OMDB API
+✅ Auto fetch poster/metadata using OMDB API.
 
-✅ Metadata cache
+✅ Sanitize and clean our folder name.
 
-✅ Clean folder/file name
+✅ TOML-based configuration.
 
-✅ TOML-based configuration
 
+❌ Right click open location with file manager
 
 ❌ Play movie within the app
 
-❌ Right click open location with file manager
+❌ Multi library suport
 
 ### Development steps
 First install the dependencies
@@ -33,4 +33,4 @@ then run
 ```
 
 ## Troubleshoot
-⚠️ Poster doesn't show up? You may need to manually rename the folder.
+⚠️ Poster doesn't show up? The app will try it's best to sanitize your folder name but, if it doesn't work you may need to manually rename the folder.
