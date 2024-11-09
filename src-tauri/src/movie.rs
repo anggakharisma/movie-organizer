@@ -31,13 +31,14 @@ impl Movie {
         }
     }
 
-    fn check_cache(t: &Movie) -> Option<Movie> {
+    fn check_cache(m: &Movie) -> Option<Movie> {
         let cache = get_cache_movie_dir().join("movie.json");
         let cache_file = fs::read_to_string(&cache).unwrap();
 
         let movie_cache: serde_json::Value = serde_json::from_str(&cache_file).unwrap();
         let movie_json: Vec<Movie> = serde_json::from_value(movie_cache).unwrap();
-        if let Some(m) = movie_json.iter().find(|f| t.name == f.name) {
+
+        if let Some(m) = movie_json.iter().find(|f| m.name == f.name) {
             return Some(m.clone());
         }
         None
@@ -88,8 +89,7 @@ impl Movie {
                 self.poster = Some(String::from(a["Poster"].as_str().unwrap()));
             }
             None => {
-                // TODO: Replace this with actual image
-                self.poster = Some("placeholder image".to_string());
+                self.poster = Some("placeholder".to_string());
             }
         };
         Ok(())
@@ -102,7 +102,8 @@ pub async fn get_movie_list() -> Result<Vec<Movie>, &'static str> {
         return Err("Please set your movie directory");
     }
 
-    let file_list_result = fs::read_dir(get_selected_movie_dir()).unwrap();
+    let file_list_result =
+        fs::read_dir(get_selected_movie_dir()).expect("Error getting config file");
 
     let filtered_file_list: Vec<String> = file_list_result
         .map(|y| y.unwrap())
