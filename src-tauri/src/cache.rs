@@ -12,18 +12,18 @@ pub fn create_cache_movie_file() {
     std::fs::create_dir_all(&cache_dir).unwrap();
 
     let file_path = cache_dir.join("movie.json");
-
-    // Check if file exists
-    if let Ok(mut file) = File::open(&file_path) {
-        // File exists, check if it's empty
-        let mut contents = String::new();
-        if file.read_to_string(&mut contents).unwrap() == 0 || contents.trim().is_empty() {
-            // File is empty, write empty JSON array
-            std::fs::write(&file_path, "[]").unwrap();
+    match File::open(&file_path) {
+        Ok(mut file) => {
+            let mut contents = String::new();
+            if file.read_to_string(&mut contents).unwrap() == 0 || contents.trim().is_empty() {
+                // File is empty, write empty JSON array
+                std::fs::write(&file_path, "[]").unwrap();
+            }
         }
-    } else {
-        File::create(&file_path)
-            .and_then(|_| std::fs::write(&file_path, "[]"))
-            .unwrap();
+        Err(_) => {
+            File::create(&file_path)
+                .and_then(|_| std::fs::write(&file_path, "[]"))
+                .unwrap();
+        }
     }
 }
