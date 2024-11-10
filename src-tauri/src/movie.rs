@@ -12,6 +12,7 @@ pub struct Movie {
     pub year: Option<usize>,
     pub path: Option<String>,
     pub category: Option<String>,
+    pub description: Option<String>,
 }
 
 impl Movie {
@@ -21,9 +22,11 @@ impl Movie {
         year: Option<usize>,
         path: Option<String>,
         category: Option<String>,
+        description: Option<String>,
     ) -> Self {
         Movie {
             name,
+            description,
             poster,
             year,
             path,
@@ -118,7 +121,7 @@ pub async fn get_movie_list() -> Result<Vec<Movie>, &'static str> {
     let mut movie_list: Vec<Movie> = vec![];
 
     for p in filtered_file_list {
-        let mut movie = Movie::new(p, None, None, None, None);
+        let mut movie = Movie::new(p, None, None, None, None, None);
         movie.clean_name();
 
         if let Some(cached_movie) = movie.check_cache() {

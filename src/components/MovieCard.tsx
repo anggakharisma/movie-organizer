@@ -14,7 +14,6 @@ const MovieCard = ({ movie }: { movie: Movie }) => {
 
 			<div
 				className="bg-cover h-96 p-4 w-full rounded-lg object-contain bg-gray-600"
-				alt="movie card"
 			><p className="text-white text-xl">{movie.name.substring(0, 50)}</p></div>
 			:
 			<img
