@@ -1,10 +1,12 @@
-import { useEffect, useState } from "react";
 import { open } from "@tauri-apps/api/dialog";
-
 import { invoke } from "@tauri-apps/api/tauri";
+import { useEffect, useState } from "react";
 import "./App.css";
-import Titlebar from "./components/Titlebar";
 import MovieCard, { Movie } from "./components/MovieCard";
+import Titlebar from "./components/Titlebar";
+
+// !TODO: change zoom level/size when scroll up and down, is this possible using
+// grid
 
 function App() {
 	const [movieList, setMovieList] = useState<any>([]);
