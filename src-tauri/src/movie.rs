@@ -74,8 +74,8 @@ impl Movie {
 
     async fn fetch_metdata(&mut self) -> Result<(), Box<dyn Error>> {
         // !TODO:
-        // it would be nice if this support multiple providers so user can choose
-        // their source
+        // it would be nice if this support multiple providers so user can choose their source
+        // or even upload their own image and metadata
         let base_url = format!(
             "https://www.omdbapi.com/?apikey={}&t={}",
             "eecc",
