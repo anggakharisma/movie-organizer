@@ -3,7 +3,7 @@ use std::{error::Error, fs};
 use regex::Regex;
 use serde::{Deserialize, Serialize};
 
-use crate::{cache::get_cache_movie_dir, config::get_selected_movie_dir};
+use crate::{cache::get_cache_dir, config::get_selected_movie_dir};
 
 #[derive(Serialize, Debug, Deserialize, Clone)]
 pub struct Movie {
@@ -35,7 +35,7 @@ impl Movie {
     }
 
     fn check_cache(&mut self) -> Option<Movie> {
-        let cache = get_cache_movie_dir().join("movie.json");
+        let cache = get_cache_dir().join("movie.json");
         let cache_file = fs::read_to_string(&cache).unwrap();
 
         let movie_cache: serde_json::Value = serde_json::from_str(&cache_file).unwrap();
@@ -48,7 +48,7 @@ impl Movie {
     }
 
     fn write_to_cache(&self) {
-        let cache = get_cache_movie_dir().join("movie.json");
+        let cache = get_cache_dir().join("movie.json");
 
         let data = fs::read_to_string(&cache).unwrap();
         let mut movies: Vec<Movie> = vec![];
@@ -78,8 +78,7 @@ impl Movie {
         // or even upload their own image and metadata
         let base_url = format!(
             "https://www.omdbapi.com/?apikey={}&t={}",
-            "eecc",
-            &self.name[..]
+            "eecc", &self.name
         )
         .to_string();
 

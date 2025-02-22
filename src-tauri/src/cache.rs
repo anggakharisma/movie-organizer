@@ -2,16 +2,16 @@ use directories::BaseDirs;
 
 use std::{fs::File, io::Read, path::PathBuf};
 
-pub fn get_cache_movie_dir() -> PathBuf {
+pub fn get_cache_dir() -> PathBuf {
     let cache_dir = BaseDirs::new().unwrap().cache_dir().join("seirei");
     cache_dir
 }
 
-pub fn create_cache_movie_file() {
-    let cache_dir = get_cache_movie_dir();
+pub fn create_cache_file(file_name: String) {
+    let cache_dir = get_cache_dir();
     std::fs::create_dir_all(&cache_dir).unwrap();
 
-    let file_path = cache_dir.join("movie.json");
+    let file_path = cache_dir.join(format!("{}.json", file_name));
     match File::open(&file_path) {
         Ok(mut file) => {
             let mut contents = String::new();

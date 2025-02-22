@@ -1,5 +1,3 @@
-trait Error {}
-
 pub struct FetchError {
     message: String,
     code: usize,

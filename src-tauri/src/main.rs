@@ -9,7 +9,7 @@ mod movie;
 
 use std::{fs::File, vec};
 
-use cache::create_cache_movie_file;
+use cache::create_cache_file;
 use config::set_key_value;
 use directories::ProjectDirs;
 use movie::get_movie_list;
@@ -21,7 +21,7 @@ fn initialize_config() {
 
     let path = std::path::Path::new(proj_dirs.config_dir());
 
-    create_cache_movie_file();
+    create_cache_file("movie".to_string());
 
     if !path.exists() || !path.join("config.toml").exists() {
         std::fs::create_dir_all(path).unwrap();
