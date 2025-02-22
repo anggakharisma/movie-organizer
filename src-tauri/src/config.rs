@@ -1,6 +1,5 @@
 use serde::{Deserialize, Serialize};
-use std::{default, fs, path::PathBuf};
-use tauri::utils::config;
+use std::{fs, path::PathBuf};
 
 use directories::ProjectDirs;
 
