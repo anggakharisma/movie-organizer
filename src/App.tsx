@@ -1,11 +1,13 @@
-import { open } from "@tauri-apps/api/dialog";
-import { invoke } from "@tauri-apps/api/tauri";
 import { useEffect, useState } from "react";
 import "./App.css";
 import MovieCard, { Movie } from "./components/MovieCard";
 import Titlebar from "./components/Titlebar";
+import { invoke } from "@tauri-apps/api/core";
+import { open } from '@tauri-apps/plugin-dialog';
 
-// !TODO: change zoom level/size when scroll up and down, is this possible using
+
+// !TODO: 
+// change zoom level/size when scroll up and down, is this possible using
 // grid
 
 function App() {
@@ -19,6 +21,7 @@ function App() {
 			setMovieList([]);
 		}
 	}, []);
+
 	async function fetchMovieLists() {
 		try {
 			setIsLoading(true);

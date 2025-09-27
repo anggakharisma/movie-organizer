@@ -34,6 +34,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     initialize_config();
 
     tauri::Builder::default()
+        .plugin(tauri_plugin_dialog::init())
         .invoke_handler(tauri::generate_handler![
             get_movie_list,
             set_key_value,
@@ -41,7 +42,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         ])
         .setup(|app| {
             #[cfg(debug_assertions)]
-            app.get_window("main").unwrap().open_devtools();
+            app.get_webview_window("main").unwrap().open_devtools();
             Ok(())
         })
         .run(tauri::generate_context!())

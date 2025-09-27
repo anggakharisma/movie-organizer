@@ -84,14 +84,14 @@ impl Movie {
 
         println!("{}", base_url);
 
-        let a = reqwest::get(base_url)
+        let metdata_req = reqwest::get(base_url)
             .await?
             .json::<serde_json::Value>()
             .await?;
 
-        match a.get("Poster") {
+        match metdata_req.get("Poster") {
             Some(_) => {
-                self.poster = Some(String::from(a["Poster"].as_str().unwrap()));
+                self.poster = Some(String::from(metdata_req["Poster"].as_str().unwrap()));
             }
             None => {
                 self.poster = Some("placeholder".to_string());
