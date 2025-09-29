@@ -17,7 +17,7 @@ use tauri::Manager;
 
 #[tauri::command]
 fn initialize_config() {
-    let proj_dirs = ProjectDirs::from("com", "dashdev", "seirei").expect("Can't get file");
+    let proj_dirs = ProjectDirs::from("com", "dashdev", "morg").expect("Can't get file");
 
     let path = std::path::Path::new(proj_dirs.config_dir());
 

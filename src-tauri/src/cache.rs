@@ -3,7 +3,7 @@ use directories::BaseDirs;
 use std::{fs::File, io::Read, path::PathBuf};
 
 pub fn get_cache_dir() -> PathBuf {
-    let cache_dir = BaseDirs::new().unwrap().cache_dir().join("seirei");
+    let cache_dir = BaseDirs::new().unwrap().cache_dir().join("morg");
     cache_dir
 }
 
