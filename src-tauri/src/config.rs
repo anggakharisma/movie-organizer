@@ -19,8 +19,9 @@ impl Config {
     }
 
     pub fn set_key(&mut self, key: &str, val: &str) -> Result<(), String> {
+        // !TODO: Add validation?
         if val.is_empty() {
-            return Err(format!("Err"));
+            return Err(format!("Value can't be empty"));
         }
 
         match key {
