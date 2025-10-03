@@ -39,34 +39,30 @@ impl Config {
 }
 
 #[tauri::command]
-pub fn get_user_config() -> PathBuf {
+pub fn get_user_config() -> (Config, PathBuf) {
     let config_file = ProjectDirs::from("com", "dashdev", "morg")
         .expect("Can't get file")
         .config_dir()
         .join("config.toml");
-    config_file
+    let f: String = fs::read_to_string(&config_file).unwrap().parse().unwrap();
+    let config_from_toml: Config = toml::from_str(&f).unwrap();
+    (config_from_toml, config_file)
 }
 
 #[tauri::command]
 pub fn get_selected_movie_dir() -> String {
-    let user_config = get_user_config();
-    let f: String = fs::read_to_string(user_config).unwrap().parse().unwrap();
+    let (user_config_toml, _user_config) = get_user_config();
 
-    if f.is_empty() {
+    if user_config_toml.movie_dir.is_none() {
         return String::from("");
     }
 
-    let config_from_toml: Config = toml::from_str(&f).unwrap();
-    if config_from_toml.movie_dir.is_none() {
-        return String::from("");
-    }
-
-    config_from_toml.movie_dir.expect("wrong")
+    user_config_toml.movie_dir.expect("wrong")
 }
 
 #[tauri::command]
 pub fn set_key_value(key: &str, val: &str) {
-    let user_config = get_user_config();
+    let (_user_config_toml, user_config) = get_user_config();
     let mut config = Config {
         movie_dir: Default::default(),
         api_key: Default::default(),
@@ -76,3 +72,4 @@ pub fn set_key_value(key: &str, val: &str) {
     let toml = toml::to_string(&config).unwrap();
     fs::write(user_config, &toml).unwrap();
 }
+
