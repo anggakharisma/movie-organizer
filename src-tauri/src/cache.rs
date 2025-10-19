@@ -27,3 +27,11 @@ pub fn create_cache_file(file_name: String) {
         }
     }
 }
+
+pub fn clear_cache_file(file_name: String) {
+    let cache_dir = get_cache_dir();
+    let file_path = cache_dir.join(format!("{}.json", file_name));
+    if file_path.exists() {
+        std::fs::write(&file_path, "[]").unwrap();
+    }
+}
